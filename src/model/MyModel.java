@@ -11,7 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
@@ -28,19 +33,19 @@ import io.MyDecompressorInputStream;
  */
 public class MyModel extends Observable implements Model {
 	
-	//private ExecutorService executor;
+	private ExecutorService executor;
 	private Map<String, Maze3d> mazes;
 	private HashMap<String, Solution<Position>> solutions;
-	private List<Thread> threads;
+	private HashMap<Maze3d, Solution<Maze3d>> mazeWithSol;
 	
 	/**
 	 * CTOR
 	 */
 	public MyModel() {
-		//executor = Executors.newFixedThreadPool(50);
-		mazes = new ConcurrentHashMap<String, Maze3d>();
+		this.executor = Executors.newCachedThreadPool();
+		this.mazes = new ConcurrentHashMap<String, Maze3d>();
 		this.solutions = new HashMap<>();
-		this.threads=new ArrayList<Thread>();
+		this.mazeWithSol=new HashMap<>();
 	}		
 	
 	/**
@@ -52,19 +57,32 @@ public class MyModel extends Observable implements Model {
 	 */
 	@Override
 	public void generateMaze(String name,int floors, int rows, int cols) {
-		Thread thread = new Thread(new Runnable() {
+		Future<Maze3d> future=executor.submit(new Callable<Maze3d>() {
+
 			@Override
-			public void run() {
+			public Maze3d call() throws Exception {
 				GrowingTreeGenerator generator = new GrowingTreeGenerator();
 				Maze3d maze = generator.generate(floors,rows, cols);
 				mazes.put(name, maze);
 				
 				setChanged();
 				notifyObservers("maze ready " + name);
+				return maze;
 			}
 		});
-		thread.start();
-		threads.add(thread);
+		
+		while(future.isDone())
+		{
+			setChanged();
+			try {
+				if(future.get()!=null)
+					notifyObservers("true");
+				else
+					notifyObservers("false");
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -195,10 +213,12 @@ public class MyModel extends Observable implements Model {
 	 * solve the maze
 	 */
 	@Override
-	public void solveMaze(String mazeName,String alg){		
-		Thread thread = new Thread(new Runnable() {
+	public void solveMaze(String mazeName,String alg){
+		Future<Solution> future=executor.submit(new Callable<Solution>() {
+
 			@Override
-			public void run() {
+			public Solution call() throws Exception {
+				
 				if (mazeName!=null && alg!=null){
 					if (mazes.containsKey(mazeName)){
 						Maze3d maze=getMaze(mazeName);
@@ -209,34 +229,44 @@ public class MyModel extends Observable implements Model {
 							BFS<Position> searcher = new BFS<>();
 							solution = searcher.search(mazeAdapter);
 							solutions.put(mazeName, solution);
-							setChanged();
-							notifyObservers("the solution is ready");
+							notifyObservers("The Solution is ready");
 						}
 						else if (alg.toUpperCase().equals("DFS")) {
 							DFS<Position> searcher = new DFS<>();
 							solution = searcher.search(mazeAdapter);
 							solutions.put(mazeName, solution);
-							setChanged();
-							notifyObservers("the solution is ready");
+							notifyObservers("The Solution is ready");
+							
 						}
-						else{
-							setChanged();
+						else
 							notifyObservers("ERROR: you entered the wrong solution name");
-						}
+						
+						return solution;
 					}
 					else{
-						setChanged();
 						notifyObservers("ERROR: maze doesn't exist");
+						return null;
 					}
 				}
 				else{
-					setChanged();
 					notifyObservers("Error: the maze name or algorithm is empty");
+					return null;
 				}
-			}
+				
+			}			
 		});
-		thread.start();
-		threads.add(thread);
+		
+		while(future.isDone()){
+			setChanged();
+			try {
+				if(future.get()!=null)
+					notifyObservers("true");
+				else
+					notifyObservers("false");
+			} catch (InterruptedException | ExecutionException e) {
+					e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -305,11 +335,7 @@ public class MyModel extends Observable implements Model {
 	 * exit command
 	 */
 	public void exit() {
-		for (Thread t: threads){
-			t.interrupt();
-		}
-		setChanged();
-		notifyObservers("BYE BYE");
+		executor.shutdownNow();
 	}
 	
 }

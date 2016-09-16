@@ -74,7 +74,7 @@ public class MyView extends Observable implements View, Observer {
 	}
 
 	/**
-	 * ???????????????
+	 * Updates the Observable
 	 */
 	@Override
 	public void update(Observable o, Object arg) {
