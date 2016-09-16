@@ -76,9 +76,9 @@ public class MyModel extends Observable implements Model {
 			setChanged();
 			try {
 				if(future.get()!=null)
-					notifyObservers("true");
+					notifyObservers(true);
 				else
-					notifyObservers("false");
+					notifyObservers(false);
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
@@ -222,8 +222,10 @@ public class MyModel extends Observable implements Model {
 				if (mazeName!=null && alg!=null){
 					if (mazes.containsKey(mazeName)){
 						if(mazeWithSol.containsKey(mazes.get(mazeName)))
+						{	
+							notifyObservers(true);
 							return mazeWithSol.get(mazes.get(mazeName));
-						
+						}
 						Maze3d maze=getMaze(mazeName);
 						Solution<Position> solution = new Solution<>();
 						Maze3dSearchable mazeAdapter = new Maze3dSearchable(maze);
@@ -264,9 +266,9 @@ public class MyModel extends Observable implements Model {
 			setChanged();
 			try {
 				if(future.get()!=null)
-					notifyObservers("true");
+					notifyObservers(true);
 				else
-					notifyObservers("false");
+					notifyObservers(false);
 			} catch (InterruptedException | ExecutionException e) {
 					e.printStackTrace();
 			}
