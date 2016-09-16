@@ -28,7 +28,6 @@ public class CLI extends Observable {
 			@Override
 			public void run() {
 				while (true) {
-				
 					printMenu();
 					try {
 						String commandLine = in.readLine();
@@ -39,7 +38,6 @@ public class CLI extends Observable {
 							break;
 						
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -62,10 +60,18 @@ public class CLI extends Observable {
 	public void printMenu(){
     	printOutput("\n\n********************************");
     	printOutput("what do want to do? ");
+    	printOutput("		dir <path>");
+    	printOutput("		generate_maze <mazeName> <x> <y> <z>");
+    	printOutput("		display <name>");
+    	printOutput("		display_cross_section <axle> <index> <mazeName>");
+    	printOutput("		save_maze <mazeName> <fileName>");
+    	printOutput("		load_maze <mazeName> <fileName>");
+    	printOutput("		solve <mazeName> <algorithm>");
+    	printOutput("		display_solution <mazeName>");
+    	printOutput("		exit");
+    	printOutput("********************************\n");
 		/*for (String command : commands.keySet()) {
 			out.print(command + ",");
-		}
-		out.println(")");*/
-		out.flush();
+		}*/
 	}
 }

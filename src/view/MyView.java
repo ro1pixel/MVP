@@ -93,9 +93,9 @@ public class MyView extends Observable implements View, Observer {
 		if (listOfFiles!=null)
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
-					System.out.println("File " + listOfFiles[i].getName());
+					printOutput("File " + listOfFiles[i].getName());
 				} else if (listOfFiles[i].isDirectory()) {
-					System.out.println("Directory " + listOfFiles[i].getName());
+					printOutput("Directory " + listOfFiles[i].getName());
 				}
 			}
 	}

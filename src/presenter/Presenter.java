@@ -8,6 +8,7 @@ import model.Model;
 import view.View;
 
 public class Presenter implements Observer {
+	
 	private Model model;
 	private View view;
 	private CommandsManager commandsManager;
@@ -21,25 +22,38 @@ public class Presenter implements Observer {
 		commands = commandsManager.getCommandsMap();
 	}
 
+	/**
+	 * update gets the input from the user and start the command
+	 */
 	@Override
 	public void update(Observable o, Object arg) {
-		String commandLine = (String)arg;
+		if (o==view){
+			String commandLine = (String)arg;
 		
-		String arr[] = commandLine.split(" ");
-		String command = arr[0];			
-		
-		if(!commands.containsKey(command)) {
-			view.printOutput("Command doesn't exist");			
+			String arr[] = commandLine.split(" ");
+			String command = arr[0];			
+			
+			if(!commands.containsKey(command)) {
+				view.printOutput("Command doesn't exist");			
+			}
+			else {
+				String[] args = null;
+				if (arr.length > 1) {
+					String commandArgs = commandLine.substring(commandLine.indexOf(" ") + 1);
+					args = commandArgs.split(" ");							
+				}
+				try {
+					commands.get(command).doCommand(args);
+				}
+				catch (Exception e){
+					view.printOutput("ERROR:");
+					e.printStackTrace();
+				}
+			}
 		}
 		else {
-			String[] args = null;
-			if (arr.length > 1) {
-				String commandArgs = commandLine.substring(
-						commandLine.indexOf(" ") + 1);
-				args = commandArgs.split(" ");							
-			}
-			Command cmd = commands.get(command);
-			cmd.doCommand(args);	
+			String message = (String)arg;
+			view.printOutput(message);
 		}
 	}
 }

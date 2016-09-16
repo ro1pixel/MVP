@@ -3,14 +3,6 @@ package presenter;
 import java.util.HashMap;
 
 import algorithms.mazeGenerators.Maze3d;
-import controller.Command;
-import controller.CommandsManager.displayCrossSectionCommand;
-import controller.CommandsManager.displayFilesInPathCommand;
-import controller.CommandsManager.displaySolutionCommand;
-import controller.CommandsManager.exitCommand;
-import controller.CommandsManager.loadMazeCommand;
-import controller.CommandsManager.saveMazeCommand;
-import controller.CommandsManager.solveMazeCommand;
 import model.Model;
 import view.View;
 
@@ -98,7 +90,8 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			view.displayFiles(model.listFiles(args));
+			String path=args[0];
+			view.displayFiles(model.listFiles(path));
 		}
 	}
 
@@ -110,7 +103,9 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-				model.saveMaze(args);
+			String mazeName=args[0];
+			String fileName=args[1];
+			model.saveMaze(mazeName,fileName);
 		}
 	}
 	/**
@@ -121,9 +116,10 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.loadMaze(args);
+			String mazeName=args[0];
+			String fileName=args[1];
+			model.loadMaze(mazeName, fileName);
 		}
-		
 	}
 	
 	/**
@@ -134,7 +130,10 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			view.displayCrossSection(model.getCrossSection(args));
+			String axis=args[0];
+			Integer floors= Integer.parseInt(args[1]);
+			String mazeName = args[2];
+			view.displayCrossSection(model.getCrossSection(axis,floors,mazeName));
 		}
 	}
 	
@@ -146,7 +145,9 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-			model.solveMaze(args);
+			String mazeName=args[0];
+			String alg=args[1];
+			model.solveMaze(mazeName ,alg);
 		}
 	}
 	
@@ -157,7 +158,8 @@ public class CommandsManager {
 
 		@Override
 		public void doCommand(String[] args) {
-				view.displaySolution(model.getSolution(args));
+			String mazeName=args[0];
+			view.displaySolution(model.getSolution(mazeName));
 		}
 	}
 	
