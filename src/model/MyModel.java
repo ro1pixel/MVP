@@ -36,7 +36,7 @@ public class MyModel extends Observable implements Model {
 	private ExecutorService executor;
 	private Map<String, Maze3d> mazes;
 	private HashMap<String, Solution<Position>> solutions;
-	private HashMap<Maze3d, Solution<Maze3d>> mazeWithSol;
+	private HashMap<Maze3d, Solution<Position>> mazeWithSol;
 	
 	/**
 	 * CTOR
@@ -221,6 +221,9 @@ public class MyModel extends Observable implements Model {
 				
 				if (mazeName!=null && alg!=null){
 					if (mazes.containsKey(mazeName)){
+						if(mazeWithSol.containsKey(mazes.get(mazeName)))
+							return mazeWithSol.get(mazes.get(mazeName));
+						
 						Maze3d maze=getMaze(mazeName);
 						Solution<Position> solution = new Solution<>();
 						Maze3dSearchable mazeAdapter = new Maze3dSearchable(maze);
@@ -241,6 +244,7 @@ public class MyModel extends Observable implements Model {
 						else
 							notifyObservers("ERROR: you entered the wrong solution name");
 						
+						mazeWithSol.put(mazes.get(mazeName),solution);
 						return solution;
 					}
 					else{
