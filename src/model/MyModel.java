@@ -1,14 +1,14 @@
 package model;
 
+import java.beans.XMLDecoder;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.Callable;
@@ -27,6 +27,7 @@ import algorithms.search.Maze3dSearchable;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
+import presenter.Properties;
 
 /**
  * MyModel class extends Observable implements Model
@@ -36,16 +37,39 @@ public class MyModel extends Observable implements Model {
 	private ExecutorService executor;
 	private Map<String, Maze3d> mazes;
 	private HashMap<String, Solution<Position>> solutions;
-	private HashMap<Maze3d, Solution<Position>> mazeWithSol;
-	
+	private String generateType;
+	private String solveAlg;
+
 	/**
 	 * CTOR
 	 */
 	public MyModel() {
-		this.executor = Executors.newCachedThreadPool();
 		this.mazes = new ConcurrentHashMap<String, Maze3d>();
 		this.solutions = new HashMap<>();
-		this.mazeWithSol=new HashMap<>();
+		/*
+		//load from properties file
+		try {
+			FileInputStream fileInput = new FileInputStream(new File("properties.xml"));
+			java.util.Properties properties=new java.util.Properties();
+			properties.loadFromXML(fileInput);
+			//fileInput.close();
+			this.generateType = (String)properties.get("GenerateType");
+			this.solveAlg = (String)properties.get("SolutionAlgorthim");
+			Integer number=(Integer)(properties.get("NumberOfThreads"));
+			this.executor = Executors.newFixedThreadPool(number);
+			
+			XMLDecoder xml=new XMLDecoder(new FileInputStream("properties.xml"));
+			Properties properties=(Properties)xml.readObject();
+			this.executor = Executors.newFixedThreadPool(properties.getNumThreads());
+			this.generateType = properties.getGenerateMaze();
+			this.solveAlg = properties.getSolutionAlg();
+			xml.close();
+			
+		} catch (Exception e1) {
+			this.executor = Executors.newCachedThreadPool();
+			this.generateType = "growing";
+			this.solveAlg = "BFS";
+		}*/
 	}		
 	
 	/**
@@ -61,27 +85,31 @@ public class MyModel extends Observable implements Model {
 
 			@Override
 			public Maze3d call() throws Exception {
-				GrowingTreeGenerator generator = new GrowingTreeGenerator();
-				Maze3d maze = generator.generate(floors,rows, cols);
+				Maze3d maze;
+				if (generateType.toUpperCase().equals("growing")){
+					maze = new GrowingTreeGenerator().generate(floors,rows, cols);
+				}
+				else {//it is a simple
+					maze = new GrowingTreeGenerator().generate(floors,rows, cols);
+				}
 				mazes.put(name, maze);
 				
 				setChanged();
-				notifyObservers("maze ready " + name);
+				notifyObservers("maze is ready " + name);
 				return maze;
 			}
 		});
 		
-		while(future.isDone())
+		while(!future.isDone())
 		{
-			setChanged();
-			try {
-				if(future.get()!=null)
-					notifyObservers(true);
-				else
-					notifyObservers(false);
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
-			}
+			
+		}
+		setChanged();
+		try {
+			if(future.get()!=null)
+				notifyObservers("done");
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -220,12 +248,12 @@ public class MyModel extends Observable implements Model {
 			public Solution call() throws Exception {
 				
 				if (mazeName!=null && alg!=null){
-					if (mazes.containsKey(mazeName)){
-						if(mazeWithSol.containsKey(mazes.get(mazeName)))
-						{	
-							notifyObservers(true);
-							return mazeWithSol.get(mazes.get(mazeName));
-						}
+					if (solutions.containsKey(mazeName)){
+						setChanged();
+						notifyObservers("the solution is ready");
+						return solutions.get(mazeName);
+					}
+					else if (mazes.containsKey(mazeName)){
 						Maze3d maze=getMaze(mazeName);
 						Solution<Position> solution = new Solution<>();
 						Maze3dSearchable mazeAdapter = new Maze3dSearchable(maze);
@@ -243,10 +271,19 @@ public class MyModel extends Observable implements Model {
 							notifyObservers("The Solution is ready");
 							
 						}
-						else
-							notifyObservers("ERROR: you entered the wrong solution name");
-						
-						mazeWithSol.put(mazes.get(mazeName),solution);
+						else if (solveAlg.toUpperCase().equals("BFS")){
+							BFS<Position> searcher = new BFS<>();
+							solution = searcher.search(mazeAdapter);
+							solutions.put(mazeName, solution);
+							notifyObservers("The Solution is ready");
+						}
+						else if (solveAlg.toUpperCase().equals("DFS")) {
+							DFS<Position> searcher = new DFS<>();
+							solution = searcher.search(mazeAdapter);
+							solutions.put(mazeName, solution);
+							notifyObservers("The Solution is ready");
+							
+						}
 						return solution;
 					}
 					else{
@@ -262,16 +299,16 @@ public class MyModel extends Observable implements Model {
 			}			
 		});
 		
-		while(future.isDone()){
-			setChanged();
-			try {
-				if(future.get()!=null)
-					notifyObservers(true);
-				else
-					notifyObservers(false);
-			} catch (InterruptedException | ExecutionException e) {
-					e.printStackTrace();
-			}
+		while(!future.isDone())
+		{
+			
+		}
+		setChanged();
+		try {
+			if(future.get()!=null)
+				notifyObservers("done");
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
 		}
 	}
 	
