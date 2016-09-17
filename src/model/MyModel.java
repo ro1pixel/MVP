@@ -27,7 +27,6 @@ import algorithms.search.Maze3dSearchable;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
-import presenter.Properties;
 
 /**
  * MyModel class extends Observable implements Model
@@ -46,30 +45,23 @@ public class MyModel extends Observable implements Model {
 	public MyModel() {
 		this.mazes = new ConcurrentHashMap<String, Maze3d>();
 		this.solutions = new HashMap<>();
-		/*
+		
 		//load from properties file
 		try {
 			FileInputStream fileInput = new FileInputStream(new File("properties.xml"));
 			java.util.Properties properties=new java.util.Properties();
 			properties.loadFromXML(fileInput);
-			//fileInput.close();
+			fileInput.close();
 			this.generateType = (String)properties.get("GenerateType");
 			this.solveAlg = (String)properties.get("SolutionAlgorthim");
-			Integer number=(Integer)(properties.get("NumberOfThreads"));
-			this.executor = Executors.newFixedThreadPool(number);
-			
-			XMLDecoder xml=new XMLDecoder(new FileInputStream("properties.xml"));
-			Properties properties=(Properties)xml.readObject();
-			this.executor = Executors.newFixedThreadPool(properties.getNumThreads());
-			this.generateType = properties.getGenerateMaze();
-			this.solveAlg = properties.getSolutionAlg();
-			xml.close();
+			String number=(String)(properties.get("NumberOfThreads"));
+			this.executor = Executors.newFixedThreadPool(Integer.valueOf(number));
 			
 		} catch (Exception e1) {
 			this.executor = Executors.newCachedThreadPool();
 			this.generateType = "growing";
 			this.solveAlg = "BFS";
-		}*/
+		}
 	}		
 	
 	/**
@@ -86,7 +78,7 @@ public class MyModel extends Observable implements Model {
 			@Override
 			public Maze3d call() throws Exception {
 				Maze3d maze;
-				if (generateType.toUpperCase().equals("growing")){
+				if (generateType.toUpperCase().equals("GROWING")){
 					maze = new GrowingTreeGenerator().generate(floors,rows, cols);
 				}
 				else {//it is a simple
