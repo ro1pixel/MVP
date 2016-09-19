@@ -11,6 +11,7 @@ public class Properties implements Serializable{
 	private String generateMaze;
 	private String solutionAlg;
 	private int numThreads;
+	private String viewStyle;
 
 	/**
 	 * CTOR
@@ -18,6 +19,7 @@ public class Properties implements Serializable{
 	public Properties() {
 		this.generateMaze=null;
 		this.solutionAlg=null;
+		this.viewStyle=null;
 	}
 	
 	/**
@@ -26,10 +28,11 @@ public class Properties implements Serializable{
 	 * @param solutionAlg the Algorithm we will use to solve a maze
 	 * @param numThreads the number we will put in the threadPool
 	 */
-	public Properties(String generateMaze, String solutionAlg, int numThreads){
+	public Properties(String generateMaze, String solutionAlg, int numThreads, String viewStyle){
 		this.generateMaze=generateMaze;
 		this.solutionAlg=solutionAlg;
 		this.numThreads=numThreads;
+		this.viewStyle=viewStyle;
 	}
 	
 	/**
@@ -40,6 +43,7 @@ public class Properties implements Serializable{
 		this.generateMaze=pr.generateMaze;
 		this.solutionAlg=pr.solutionAlg;
 		this.numThreads=pr.numThreads;
+		this.viewStyle=pr.viewStyle;
 	}
 	
 	/**
@@ -88,6 +92,14 @@ public class Properties implements Serializable{
 	 */
 	public void setNumThreads(int numThreads) {
 		this.numThreads = numThreads;
+	}
+
+	public String getViewStyle() {
+		return viewStyle;
+	}
+
+	public void setViewStyle(String viewStyle) {
+		this.viewStyle = viewStyle;
 	}
 
 	

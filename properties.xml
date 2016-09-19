@@ -3,6 +3,7 @@
 <properties>
 <comment>Properties of Maze3d</comment>
 <entry key="SolutionAlgorthim">BFS</entry>
+<entry key="ViewStyle">GUI</entry>
 <entry key="NumberOfThreads">10</entry>
 <entry key="GenerateType">growing</entry>
 </properties>

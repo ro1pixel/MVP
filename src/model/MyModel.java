@@ -1,15 +1,17 @@
 package model;
 
-import java.beans.XMLDecoder;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +19,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
@@ -35,9 +39,10 @@ public class MyModel extends Observable implements Model {
 	
 	private ExecutorService executor;
 	private Map<String, Maze3d> mazes;
-	private HashMap<String, Solution<Position>> solutions;
+	private Map<String, Solution<Position>> solutions;
 	private String generateType;
 	private String solveAlg;
+	private String viewStyle;
 
 	/**
 	 * CTOR
@@ -45,6 +50,9 @@ public class MyModel extends Observable implements Model {
 	public MyModel() {
 		this.mazes = new ConcurrentHashMap<String, Maze3d>();
 		this.solutions = new HashMap<>();
+		
+		//load mazes & solutions
+		loadSolutions();
 		
 		//load from properties file
 		try {
@@ -56,11 +64,12 @@ public class MyModel extends Observable implements Model {
 			this.solveAlg = (String)properties.get("SolutionAlgorthim");
 			String number=(String)(properties.get("NumberOfThreads"));
 			this.executor = Executors.newFixedThreadPool(Integer.valueOf(number));
-			
+			this.viewStyle = (String)(properties.get("ViewStyle"));		
 		} catch (Exception e1) {
 			this.executor = Executors.newCachedThreadPool();
 			this.generateType = "growing";
 			this.solveAlg = "BFS";
+			this.viewStyle="GUI";
 		}
 	}		
 	
@@ -78,16 +87,35 @@ public class MyModel extends Observable implements Model {
 			@Override
 			public Maze3d call() throws Exception {
 				Maze3d maze;
+				Boolean mazeExist=false;
 				if (generateType.toUpperCase().equals("GROWING")){
 					maze = new GrowingTreeGenerator().generate(floors,rows, cols);
 				}
 				else {//it is a simple
 					maze = new GrowingTreeGenerator().generate(floors,rows, cols);
 				}
-				mazes.put(name, maze);
-				
-				setChanged();
-				notifyObservers("maze is ready " + name);
+				for(Entry<String, Maze3d> current:mazes.entrySet())
+				{
+					if(current.getValue().equals(maze)){
+						mazeExist=true;
+						setChanged();
+						notifyObservers("The maze name already exist with the name: "+current.getKey() );
+					}
+				}
+				if (!mazeExist)
+				{
+					if(mazes.containsKey(name))	
+					{
+						setChanged();
+						notifyObservers("the maze name is already exist");
+					}
+					else{
+						mazes.put(name, maze);
+						setChanged();
+						notifyObservers("maze is ready " + name);						
+					}
+						
+				}
 				return maze;
 			}
 		});
@@ -232,6 +260,7 @@ public class MyModel extends Observable implements Model {
 	/**
 	 * solve the maze
 	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void solveMaze(String mazeName,String alg){
 		Future<Solution> future=executor.submit(new Callable<Solution>() {
@@ -367,10 +396,67 @@ public class MyModel extends Observable implements Model {
 	}
 	
 	/**
+	 * Saves the mazes
+	 */
+	public void saveCache()
+	{
+		ObjectOutputStream oos = null;
+		try {
+		    oos = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("solutions.zip")));
+			oos.writeObject(mazes);
+			oos.writeObject(solutions);			
+			
+			System.out.println("saved the maze to file ");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				oos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	/**
+	 * Loads the mazes 
+	 */
+	@SuppressWarnings("unchecked")
+	private void loadSolutions() {
+		File file = new File("solutions.zip");
+		if (!file.exists() | !file.canRead())
+			return;
+		
+		ObjectInputStream ois = null;
+		
+		try {
+			ois = new ObjectInputStream(new GZIPInputStream(new FileInputStream("solutions.zip")));
+			mazes = (Map<String, Maze3d>)ois.readObject();
+			solutions = (Map<String, Solution<Position>>)ois.readObject();	
+			
+			System.out.println("loaded the maze ");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				ois.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}		
+	}
+	
+	/**
 	 * exit command
 	 */
 	public void exit() {
 		executor.shutdownNow();
+		saveCache();
 	}
 	
 }
