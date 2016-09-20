@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 
+
 public class MazeDisplay extends Canvas {
 	
 	private Maze3d mazeData = new Maze3d();
