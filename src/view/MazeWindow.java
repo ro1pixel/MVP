@@ -17,6 +17,7 @@ public class MazeWindow extends BasicWindow{
 	public void initWidgets() {
 		GridLayout gridLayout = new GridLayout(2,false);
 		shell.setLayout(gridLayout);
+		shell.setText("Maze3D Project");
 		
 		generateMazeButton=(new Button(shell, SWT.PUSH));
 		generateMazeButton.setText("genenrate maze");
@@ -34,7 +35,7 @@ public class MazeWindow extends BasicWindow{
 		generateHintButton.setLayoutData(new GridData(SWT.FILL,SWT.NONE,false,false,1,1));
 		
 		generateResetButton=(new Button(shell, SWT.PUSH));
-		generateResetButton.setText("hint");
+		generateResetButton.setText("reset");
 		generateResetButton.setLayoutData(new GridData(SWT.FILL,SWT.NONE,false,false,1,1));
 	}
 

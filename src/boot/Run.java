@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import model.MyModel;
 import presenter.MyPresenter;
 import presenter.Presenter;
+import view.MazeWindow;
 import view.MyView;
 
 public class Run {
@@ -26,7 +27,8 @@ public class Run {
 		view.start();
 		/*/
 		
-		
+		MazeWindow mz=new MazeWindow(500, 500);
+		mz.run();
 	}
 
 }
