@@ -1,6 +1,7 @@
 package view;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,18 +26,17 @@ public class MazeWindow extends BasicWindow{
 		generateMazeButton.setLayoutData(new GridData(SWT.FILL,SWT.NONE,false,false,1,1));
 	
 		//to check- OK!
-/*		generateMazeButton.addSelectionListener(new SelectionListener() {
-			
+		generateMazeButton.addSelectionListener(new SelectionListener() {
+
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				GenerateMazeWindow win = new GenerateMazeWindow(200,150);				
+				GenerateMazeWindow win = new GenerateMazeWindow(300,200);				
 				win.run();
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
-		*/
 		
 		maze=new MazeDisplay(shell,SWT.BORDER);
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));

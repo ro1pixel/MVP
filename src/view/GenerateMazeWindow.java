@@ -20,7 +20,13 @@ public class GenerateMazeWindow extends BasicWindow {
 		shell.setText("Generate maze window");
 				
 		shell.setLayout(new GridLayout(2, false));	
-				
+		
+		Label lblFloors = new Label(shell, SWT.NONE);
+		lblFloors.setText("Floors: ");
+		
+		Text txtFloors = new Text(shell, SWT.BORDER);
+		txtFloors.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
 		Label lblRows = new Label(shell, SWT.NONE);
 		lblRows.setText("Rows: ");
 		
