@@ -1,0 +1,53 @@
+package view;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
+
+import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
+import algorithms.search.Solution;
+import controller.Command;
+import presenter.Presenter;
+
+public abstract class CommonView extends Observable implements View,Observer{
+	
+	protected HashMap<String, Command> commands;
+	protected Presenter Presenter;	
+	
+	public CommonView() {
+		this.commands=new HashMap<>();
+		
+	}
+	@Override
+	public abstract void start();
+
+	@Override
+	public abstract void setPresenter(Presenter presenter);
+
+	@Override
+	public abstract Presenter getPresenter() ;
+
+	@Override
+	public abstract void printOutput(String str);
+
+	@Override
+	public abstract void notifyMazeIsReady(String name);
+
+	@Override
+	public abstract void displayMaze(Maze3d maze);
+
+	@Override
+	public abstract void setCommands(HashMap<String, Command> commands) ;
+
+	@Override
+	public abstract void displayFiles(File[] listOfFiles);
+
+	@Override
+	public abstract void displaySolution(Solution<Position> solution);
+	
+	@Override
+	public abstract void displayCrossSection(int[][] maze2d) ;
+
+}

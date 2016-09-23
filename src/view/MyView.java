@@ -3,21 +3,23 @@ package view;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Observable;
-import java.util.Observer;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
+import controller.Command;
+import presenter.Presenter;
 
-/*
- * MyView Class extends Observable implements View and Observer
+/**
+ * MyView extends CommonView
  */
-public class MyView extends Observable implements View, Observer {
+public class MyView extends CommonView {
 	
-	private BufferedReader in;
-	private PrintWriter out;
-	private CLI cli;	
+	protected CLI cli;
+	protected BufferedReader in;
+	protected PrintWriter out;
 
 	/**
 	 * CTOR
@@ -25,9 +27,9 @@ public class MyView extends Observable implements View, Observer {
 	 * @param out the output stream object
 	 */
 	public MyView(BufferedReader in, PrintWriter out) {
+		super();
 		this.in = in;
-		this.out = out;
-				
+		this.out = out;		
 		cli = new CLI(this.in, this.out);
 		cli.addObserver(this);
 	}
@@ -124,4 +126,22 @@ public class MyView extends Observable implements View, Observer {
 		}System.out.println("}");
 	}
 
+	@Override
+	public void setPresenter(Presenter presenter) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Presenter getPresenter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setCommands(HashMap<String, Command> commands) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

@@ -9,14 +9,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Observable;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.zip.GZIPInputStream;
@@ -35,42 +31,21 @@ import io.MyDecompressorInputStream;
 /**
  * MyModel class extends Observable implements Model
  */
-public class MyModel extends Observable implements Model {
+public class MyModel extends CommonModel {
 	
-	private ExecutorService executor;
-	private Map<String, Maze3d> mazes;
-	private Map<String, Solution<Position>> solutions;
-	private String generateType;
-	private String solveAlg;
 	private String viewStyle;
 
 	/**
 	 * CTOR
 	 */
 	public MyModel() {
-		this.mazes = new ConcurrentHashMap<String, Maze3d>();
-		this.solutions = new HashMap<>();
+		super();
 		
 		//load mazes & solutions
 		loadSolutions();
 		
 		//load from properties file
-		try {
-			FileInputStream fileInput = new FileInputStream(new File("properties.xml"));
-			java.util.Properties properties=new java.util.Properties();
-			properties.loadFromXML(fileInput);
-			fileInput.close();
-			this.generateType = (String)properties.get("GenerateType");
-			this.solveAlg = (String)properties.get("SolutionAlgorthim");
-			String number=(String)(properties.get("NumberOfThreads"));
-			this.executor = Executors.newFixedThreadPool(Integer.valueOf(number));
-			this.viewStyle = (String)(properties.get("ViewStyle"));		
-		} catch (Exception e1) {
-			this.executor = Executors.newCachedThreadPool();
-			this.generateType = "growing";
-			this.solveAlg = "BFS";
-			this.viewStyle="GUI";
-		}
+		loadProperties();
 	}		
 	
 	/**
@@ -449,6 +424,29 @@ public class MyModel extends Observable implements Model {
 				e.printStackTrace();
 			}
 		}		
+	}
+	
+	/**
+	 * Load the xml file 
+	 */
+	private void loadProperties()
+	{
+		try {
+			FileInputStream fileInput = new FileInputStream(new File("properties.xml"));
+			java.util.Properties properties=new java.util.Properties();
+			properties.loadFromXML(fileInput);
+			fileInput.close();
+			this.generateType = (String)properties.get("GenerateType");
+			this.solveAlg = (String)properties.get("SolutionAlgorthim");
+			String number=(String)(properties.get("NumberOfThreads"));
+			this.executor = Executors.newFixedThreadPool(Integer.valueOf(number));
+			this.viewStyle = (String)(properties.get("ViewStyle"));		
+		} catch (Exception e1) {
+			this.executor = Executors.newCachedThreadPool();
+			this.generateType = "growing";
+			this.solveAlg = "BFS";
+			this.viewStyle="GUI";
+		}
 	}
 	
 	/**
