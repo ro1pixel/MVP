@@ -10,10 +10,16 @@ public abstract class BasicWindow implements Runnable{
 
 	protected Display display;
 	protected Shell shell;
+	boolean ownDisplay = false;
 	
 	public BasicWindow(int width, int height) {
-		display=new Display();
-		shell=new Shell();
+		//display=new Display();
+		display = Display.getCurrent();
+ 		if(display == null) {
+ 			display = new Display();
+ 			ownDisplay = true;
+ 		}
+		shell=new Shell(display);
 		
 		shell.setSize(width, height);	
 	}
@@ -30,7 +36,8 @@ public abstract class BasicWindow implements Runnable{
 				display.sleep();
 			}
 		}
-		display.dispose();
+		if(ownDisplay)
+			display.dispose();
 	}
 	
 	/**
