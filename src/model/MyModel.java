@@ -243,7 +243,7 @@ public class MyModel extends CommonModel {
 			@Override
 			public Solution call() throws Exception {
 				
-				if (mazeName!=null && alg!=null){
+				if (mazeName!=null){
 					if (solutions.containsKey(mazeName)){
 						setChanged();
 						notifyObservers("the solution is ready");
@@ -253,32 +253,35 @@ public class MyModel extends CommonModel {
 						Maze3d maze=getMaze(mazeName);
 						Solution<Position> solution = new Solution<>();
 						Maze3dSearchable mazeAdapter = new Maze3dSearchable(maze);
-					
-						if(alg.toUpperCase().equals("BFS")) {
+						if (alg!=null){
+							if(alg.toUpperCase().equals("BFS")) {
+								BFS<Position> searcher = new BFS<>();
+								solution = searcher.search(mazeAdapter);
+								solutions.put(mazeName, solution);
+								notifyObservers("The Solution is ready");
+							}
+							else {
+								DFS<Position> searcher = new DFS<>();
+								solution = searcher.search(mazeAdapter);
+								solutions.put(mazeName, solution);
+								notifyObservers("The Solution is ready");
+								
+							}
+						}
+						else {
+							if (solveAlg.toUpperCase().equals("BFS")){
 							BFS<Position> searcher = new BFS<>();
 							solution = searcher.search(mazeAdapter);
 							solutions.put(mazeName, solution);
 							notifyObservers("The Solution is ready");
-						}
-						else if (alg.toUpperCase().equals("DFS")) {
-							DFS<Position> searcher = new DFS<>();
-							solution = searcher.search(mazeAdapter);
-							solutions.put(mazeName, solution);
-							notifyObservers("The Solution is ready");
-							
-						}
-						else if (solveAlg.toUpperCase().equals("BFS")){
-							BFS<Position> searcher = new BFS<>();
-							solution = searcher.search(mazeAdapter);
-							solutions.put(mazeName, solution);
-							notifyObservers("The Solution is ready");
-						}
-						else if (solveAlg.toUpperCase().equals("DFS")) {
-							DFS<Position> searcher = new DFS<>();
-							solution = searcher.search(mazeAdapter);
-							solutions.put(mazeName, solution);
-							notifyObservers("The Solution is ready");
-							
+							}
+							else {
+								DFS<Position> searcher = new DFS<>();
+								solution = searcher.search(mazeAdapter);
+								solutions.put(mazeName, solution);
+								notifyObservers("The Solution is ready");
+								
+							}
 						}
 						return solution;
 					}

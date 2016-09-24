@@ -6,10 +6,11 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 public class GenerateMazeWindow extends BasicWindow {
+	String name;
+	int floors, rows, cols;
 	
 	public GenerateMazeWindow(int width, int height) {
 		super(width, height);
@@ -54,18 +55,32 @@ public class GenerateMazeWindow extends BasicWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {				
-				String name=txtName.getText();
-				int floors=Integer.parseInt(txtFloors.getText());
-				int rows = Integer.parseInt(txtRows.getText());
-				int cols = Integer.parseInt(txtCols.getText());
+				name=txtName.getText();
+				floors=Integer.parseInt(txtFloors.getText());
+				rows = Integer.parseInt(txtRows.getText());
+				cols = Integer.parseInt(txtCols.getText());
 				displayInfo("Info","maze name : " + name + "\nfloors: "+floors +"\nrows: " + rows + "\ncols: " + cols);
-				
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});	
-		
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public int getFloors() {
+		return floors;
+	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public int getCols() {
+		return cols;
+	}
+	
 }

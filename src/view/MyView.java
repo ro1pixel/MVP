@@ -3,14 +3,11 @@ package view;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.Observable;
 
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
-import controller.Command;
-import presenter.Presenter;
 
 /**
  * MyView extends CommonView
@@ -124,24 +121,5 @@ public class MyView extends CommonView {
 				System.out.print(maze2d[i][j]+ ",");
 			}System.out.println("");
 		}System.out.println("}");
-	}
-
-	@Override
-	public void setPresenter(Presenter presenter) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Presenter getPresenter() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setCommands(HashMap<String, Command> commands) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+	}	
 }

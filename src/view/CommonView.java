@@ -24,12 +24,6 @@ public abstract class CommonView extends Observable implements View,Observer{
 	public abstract void start();
 
 	@Override
-	public abstract void setPresenter(Presenter presenter);
-
-	@Override
-	public abstract Presenter getPresenter() ;
-
-	@Override
 	public abstract void printOutput(String str);
 
 	@Override
@@ -37,9 +31,6 @@ public abstract class CommonView extends Observable implements View,Observer{
 
 	@Override
 	public abstract void displayMaze(Maze3d maze);
-
-	@Override
-	public abstract void setCommands(HashMap<String, Command> commands) ;
 
 	@Override
 	public abstract void displayFiles(File[] listOfFiles);

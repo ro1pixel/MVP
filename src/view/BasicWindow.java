@@ -1,12 +1,14 @@
 package view;
 
+import java.util.Observable;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class BasicWindow implements Runnable{
+public abstract class BasicWindow extends Observable implements Runnable {
 
 	protected Display display;
 	protected Shell shell;
@@ -107,7 +109,7 @@ public abstract class BasicWindow implements Runnable{
 	 * @param filterExtention
 	 * @return
 	 */
-	public String displayFileDilog(int style,String title,String [] filterExtention,String Path)
+	public String displayFileDialog(int style,String title,String [] filterExtention,String Path)
 	{
 		FileDialog fd=new FileDialog(shell,style);
 		fd.setText(title);

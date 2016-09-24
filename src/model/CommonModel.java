@@ -1,9 +1,7 @@
 package model;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,7 +10,6 @@ import java.util.concurrent.ExecutorService;
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 import algorithms.search.Solution;
-import controller.Controller;
 
 public abstract class CommonModel extends Observable implements Model {
 	protected ExecutorService executor;
