@@ -41,6 +41,7 @@ public class CommandsManager {
 		commands.put("display_solution", new displaySolutionCommand());
 		commands.put("load_properties", new loadPropertiesCommand());
 		commands.put("save_properties", new savePropertiesCommand());
+		commands.put("edit_properties", new editPropertiesCommand());
 		commands.put("exit", new exitCommand());
 		//commands.put("maze_ready", new MazeReadyCommand());
 		
@@ -169,7 +170,7 @@ public class CommandsManager {
 		
 		@Override
 		public void doCommand(String[] args) {
-			model.loadProperties();
+			model.loadProperties(args[0]);
 		}
 	}
 	
@@ -177,11 +178,19 @@ public class CommandsManager {
 		
 		@Override
 		public void doCommand(String[] args) {
+			model.saveProperties(args[0]);
+		}
+	}
+	
+public class editPropertiesCommand implements Command{
+		
+		@Override
+		public void doCommand(String[] args) {
 			String generateMaze=args[0];
 			String solutionAlg=args[1];
 			Integer numThreads=Integer.parseInt(args[2]);
 			String viewStyle=args[3];
-			model.saveProperties(generateMaze, solutionAlg, numThreads, viewStyle);
+			model.editProperties(generateMaze, solutionAlg, numThreads, viewStyle);
 		}
 	}
 	

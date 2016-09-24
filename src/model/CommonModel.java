@@ -15,8 +15,6 @@ public abstract class CommonModel extends Observable implements Model {
 	protected ExecutorService executor;
 	protected Map<String, Maze3d> mazes;
 	protected Map<String, Solution<Position>> solutions;
-	protected String generateType;
-	protected String solveAlg;
 	
 	public CommonModel() {
 		this.mazes = new ConcurrentHashMap<String, Maze3d>();
@@ -56,10 +54,10 @@ public abstract class CommonModel extends Observable implements Model {
 	public abstract void loadSolutions();
 	
 	@Override
-	public abstract void loadProperties();
+	public abstract void loadProperties(String fileName);
 	
 	@Override
-	public abstract void saveProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle);
+	public abstract void saveProperties(String path);
 	
 	@Override
 	public abstract void editProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle);

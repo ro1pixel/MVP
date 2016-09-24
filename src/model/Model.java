@@ -20,8 +20,8 @@ public interface Model {
 	public int[][] getCrossSection(String axis,Integer floor,String mazeName);
 	public void saveCache();
 	public void loadSolutions();
-	public void loadProperties();
-	public void saveProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle);
+	public void loadProperties(String fileName);
+	public void saveProperties(String path);
 	public void editProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle);
 	public void exit();
 }

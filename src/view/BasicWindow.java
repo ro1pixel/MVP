@@ -3,6 +3,7 @@ package view;
 import java.util.Observable;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
@@ -118,7 +119,7 @@ public abstract class BasicWindow extends Observable implements Runnable {
 	 * @param style
 	 * @param title
 	 * @param filterExtention
-	 * @return
+	 * @return filename
 	 */
 	public String displayFileDialog(int style,String title,String [] filterExtention,String Path)
 	{
@@ -128,5 +129,12 @@ public abstract class BasicWindow extends Observable implements Runnable {
 		fd.setFilterExtensions(filterExtention);
 		return fd.open();
 	}
+	
+	public String displayDirectoryDialog(int style,String title,String Path){
+		DirectoryDialog d=new DirectoryDialog(shell, style);
+		d.setFilterPath(Path);
+		return d.open();
+	}
+	
 
 }

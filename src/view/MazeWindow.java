@@ -8,15 +8,21 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+import algorithms.mazeGenerators.Maze3d;
+
 /**
  * MazeWindow class extends BasicWindow
  */
 public class MazeWindow extends BasicWindow{
 	protected Button generateMazeButton;
 	protected Button solutionButton;
-	protected Button hintButton,resetButton;
-	protected MazeDisplay maze;
-	protected Menu menuBar, FileMenu, HelpMenu;
+	protected Button hintButton;
+	protected Button resetButton;
+	
+	protected Menu menuBar;
+	protected Menu FileMenu;
+	protected Menu HelpMenu;
+	
     protected MenuItem cascadeFileMenu;
     protected MenuItem cascadeHelpMenu;
     protected MenuItem actionMenuItem;
@@ -26,7 +32,11 @@ public class MazeWindow extends BasicWindow{
     protected MenuItem editPropertiesMenuItem;
     protected MenuItem importPropertiesMenuItem;
     protected MenuItem exportPropertiesMenuItem;
-    protected MenuItem exitMenuItem,aboutMenuItem;
+    protected MenuItem aboutMenuItem;
+    protected MenuItem exitMenuItem;
+    
+    protected MazeDisplay mazeD;
+	protected Maze3d maze;
 
     /**
      * CTOR
@@ -52,8 +62,8 @@ public class MazeWindow extends BasicWindow{
 		generateMazeButton.setText("Genenrate Maze");
 		generateMazeButton.setLayoutData(new GridData(SWT.FILL,SWT.NONE,false,false,1,1));
 		
-		maze=new MazeDisplay(shell,SWT.BORDER);
-		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
+		mazeD=new Maze2dDisplay(shell,SWT.BORDER);
+		mazeD.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
 		
 		solutionButton=(new Button(shell, SWT.PUSH));
 		solutionButton.setText("Solution");
@@ -119,6 +129,7 @@ public class MazeWindow extends BasicWindow{
     public void generateMazeSelectionListener(SelectionListener listener){
     	generateMazeButton.addSelectionListener(listener);
     	newGameMenuItem.addSelectionListener(listener);
+    	mazeD.setMaze(maze);
 	}
 	
     /**
@@ -186,6 +197,14 @@ public class MazeWindow extends BasicWindow{
 	}
 	
 	/**
+     * exportPropertiesSelectionListener- listener for the export the properties
+     * @param listener
+     */
+	public void aboutSelectionListener(SelectionListener listener){
+		aboutMenuItem.addSelectionListener(listener);
+	}
+	
+	/**
      * exitSelectionListener- listener to exit
      * @param listener
      */
@@ -193,4 +212,10 @@ public class MazeWindow extends BasicWindow{
 		exitMenuItem.addSelectionListener(listener);
 	};
 
+	/**
+	 * close the shell
+	 */
+	public void exit(){
+		shell.dispose();
+	}
 }

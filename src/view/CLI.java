@@ -68,6 +68,9 @@ public class CLI extends Observable {
     	printOutput("		load_maze <mazeName> <fileName>");
     	printOutput("		solve <mazeName> <algorithm>");
     	printOutput("		display_solution <mazeName>");
+    	printOutput("		load_properties");
+    	printOutput("		save_properties <FolderName>");
+    	printOutput("		edit_properties <generateMaze> <SolveAlgorthm> <threadsNumber> <viewStyle>");
     	printOutput("		exit");
     	printOutput("********************************\n");
 		/*for (String command : commands.keySet()) {

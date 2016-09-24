@@ -9,7 +9,6 @@ import algorithms.mazeGenerators.Position;
 public class MazeDisplay extends Canvas{
 	protected Maze3d maze;
 	protected Position characterPosition;
-	protected String viewPlane;
 	protected boolean solved;
 
 
@@ -20,17 +19,14 @@ public class MazeDisplay extends Canvas{
 	 */
 	public MazeDisplay(Composite parent, int style) {
 		super(parent, style);
-		viewPlane = "XZ";
 	}
 
 	/**
 	 * Set the maze displayed by this widget
 	 * @param maze The maze to display
-	 * @param characterPosition The character starting position
 	 */
-	public void setMaze(Maze3d maze, Position characterPosition) {
+	public void setMaze(Maze3d maze) {
 		this.maze = maze;
-		setCharacterPosition(characterPosition);
 	}
 
 	/**
@@ -39,15 +35,6 @@ public class MazeDisplay extends Canvas{
 	 */
 	public void setCharacterPosition(Position position) {
 		characterPosition = position;
-		redraw();
-	}
-
-	/**
-	 * Set the view plane displayed by this widget
-	 * @param plane View plane
-	 */
-	public void setViewPlane(String plane) {
-		viewPlane = plane;
 		redraw();
 	}
 

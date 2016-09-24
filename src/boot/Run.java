@@ -15,7 +15,7 @@ public class Run {
 
 	public static void main(String[] args) {
 		
-		/*/BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		/*BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		PrintWriter out = new PrintWriter(System.out);
 				
 		MyView view = new MyView(in, out);
@@ -25,8 +25,7 @@ public class Run {
 		model.addObserver(presenter);
 		view.addObserver(presenter);
 				
-		view.start();
-		/*/
+		view.start();*/
 		
 		/*MazeWindow mz=new MazeWindow(500, 500);
 		mz.run();*/

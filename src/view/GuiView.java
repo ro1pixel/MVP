@@ -3,6 +3,7 @@ package view;
 import java.io.File;
 import java.util.Observable;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
@@ -27,13 +28,14 @@ public class GuiView extends CommonView{
 				mazeName=win.getName();
 				setChanged();
 				notifyObservers("generate_maze " +mazeName + " "+ win.getFloors()+ " " + win.getCols()+ " "+ win.getRows());
+				mazeWindow.displayInfo("Generate Maze", "the maze was genereated succesfully");
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
-		/*mazeWindow.solutionSelectionListener(new SelectionListener() {
+		mazeWindow.solutionSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -103,8 +105,12 @@ public class GuiView extends CommonView{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				EditPropertiesWindow win = new EditPropertiesWindow(300,210);			
+				win.run();
+				setChanged();
+				notifyObservers("edit_properties " +win.getGenerateMaze()+ " "+win.getSolutionAlg()+ " " +
+						win.getNumThreads()+" "+win.getViewStyle());
+				mazeWindow.displayInfo("Edit Properties", "the Properties was edited succesfully");			
 			}
 			
 			@Override
@@ -115,8 +121,12 @@ public class GuiView extends CommonView{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				String fileName = mazeWindow.displayFileDialog(SWT.SAVE, "Save properties", new String[] { "*.xml" }, "C:\\");
+				if(fileName != null) {
+					setChanged();
+					notifyObservers("load_properties "+fileName);
+					mazeWindow.displayInfo("Load Properties", "The properties was loaded succesfully");
+				}
 			}
 			
 			@Override
@@ -127,8 +137,23 @@ public class GuiView extends CommonView{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				
+				String folderName = mazeWindow.displayDirectoryDialog(SWT.OPEN, "select folder", "c:\\");
+				if(folderName != null) {
+					setChanged();
+					notifyObservers("save_properties "+folderName);
+					mazeWindow.displayInfo("Save Properties", "The properties was saved succesfully");
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {}
+		});
+		
+		mazeWindow.aboutSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				mazeWindow.displayInfo("About Maze3D", "Version: 1.0.0 \nDeveloped by Lihi Solomon And Lior Hagever");
 			}
 			
 			@Override
@@ -144,11 +169,12 @@ public class GuiView extends CommonView{
 					setChanged();
 					notifyObservers("exit");
 				}
+				mazeWindow.exit();
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
-		});*/
+		});
 	}
 	
 	@Override

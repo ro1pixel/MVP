@@ -33,20 +33,20 @@ import io.MyDecompressorInputStream;
  * MyModel class extends Observable implements Model
  */
 public class MyModel extends CommonModel {
+	protected String generateType;
+	protected String solveAlg;
+	protected Integer threadNum;
+	protected String viewStyle;
 	
-	private String viewStyle;
-
 	/**
-	 * CTOR
-	 */
+	* CTOR
+	*/
 	public MyModel() {
 		super();
-		
 		//load mazes & solutions
 		loadSolutions();
-		
 		//load from properties file
-		loadProperties();
+		loadProperties("properties.xml");
 	}		
 	
 	/**
@@ -434,17 +434,18 @@ public class MyModel extends CommonModel {
 	 * Load the xml file 
 	 */
 	@Override
-	public void loadProperties()
+	public void loadProperties(String fileName)
 	{
 		try {
-			FileInputStream fileInput = new FileInputStream(new File("properties.xml"));
+			FileInputStream fileInput = new FileInputStream(new File(fileName));
 			java.util.Properties properties=new java.util.Properties();
 			properties.loadFromXML(fileInput);
 			fileInput.close();
 			this.generateType = (String)properties.get("GenerateType");
 			this.solveAlg = (String)properties.get("SolutionAlgorthim");
 			String number=(String)(properties.get("NumberOfThreads"));
-			this.executor = Executors.newFixedThreadPool(Integer.valueOf(number));
+			this.threadNum=Integer.valueOf(number);
+			this.executor = Executors.newFixedThreadPool(this.threadNum);
 			this.viewStyle = (String)(properties.get("ViewStyle"));		
 		} catch (Exception e1) {
 			this.executor = Executors.newCachedThreadPool();
@@ -457,38 +458,30 @@ public class MyModel extends CommonModel {
 	}
 	
 	/**
-	 * Save xml to properties
+	 * Save properties to xml
 	 */
 	@Override
-	public void saveProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle)
+	public void saveProperties(String folderName)
 	{
-		if (generateMaze!=null && solutionAlg!=null && numThreads!=null && viewStyle!=null )
-		{
-			presenter.Properties pro=new presenter.Properties(generateMaze,solutionAlg,numThreads,viewStyle);
-			Properties properties=new Properties();
-			
-			properties.setProperty("GenerateType", pro.getGenerateMaze());
-			properties.setProperty("SolutionAlgorthim", pro.getSolutionAlg());
-			properties.setProperty("NumberOfThreads", String.valueOf(pro.getNumThreads()));
-			properties.setProperty("ViewStyle", pro.getViewStyle());
-			
-			OutputStream os;
+		presenter.Properties pro=new presenter.Properties(this.generateType,this.solveAlg,this.threadNum,this.viewStyle);
+		Properties properties=new Properties();
+		properties.setProperty("GenerateType", pro.getGenerateMaze());
+		properties.setProperty("SolutionAlgorthim", pro.getSolutionAlg());
+		properties.setProperty("NumberOfThreads", String.valueOf(pro.getNumThreads()));
+		properties.setProperty("ViewStyle", pro.getViewStyle());
+		String path=folderName+"/properties.xml";
+		OutputStream os;
+		try {
+			os = new FileOutputStream(path);
 			try {
-				os = new FileOutputStream("properties.xml");
-				try {
-					properties.storeToXML(os, "Properties of Maze3d","UTF-8");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} catch (FileNotFoundException e) {
+				properties.storeToXML(os, "Properties of Maze3d","UTF-8");
+				setChanged();
+				notifyObservers("the properties was saved");
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			setChanged();
-			notifyObservers("the properties was saved");
-		}
-		else{
-			setChanged();
-			notifyObservers("Error: the maze name or file name is empty");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -508,7 +501,7 @@ public class MyModel extends CommonModel {
 			if(viewStyle!=null)
 				this.viewStyle=viewStyle;
 				
-			loadProperties();
+			saveProperties(".");
 		}
 		else{
 			setChanged();
