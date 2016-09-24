@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import model.MyModel;
 import presenter.MyPresenter;
 import presenter.Presenter;
+import view.GuiView;
 import view.MazeWindow;
 import view.MyView;
 
@@ -27,8 +28,17 @@ public class Run {
 		view.start();
 		/*/
 		
-		MazeWindow mz=new MazeWindow(500, 500);
-		mz.run();
+		/*MazeWindow mz=new MazeWindow(500, 500);
+		mz.run();*/
+		
+		GuiView gui=new GuiView();
+		MyModel model = new MyModel();
+		
+		MyPresenter presenter = new MyPresenter(model, gui);
+		model.addObserver(presenter);
+		gui.addObserver(presenter);
+				
+		gui.start();
 	}
 
 }

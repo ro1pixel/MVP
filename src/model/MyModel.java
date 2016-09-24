@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -376,6 +377,7 @@ public class MyModel extends CommonModel {
 	/**
 	 * Saves the mazes
 	 */
+	@Override
 	public void saveCache()
 	{
 		ObjectOutputStream oos = null;
@@ -384,7 +386,6 @@ public class MyModel extends CommonModel {
 			oos.writeObject(mazes);
 			oos.writeObject(solutions);			
 			
-			System.out.println("saved the maze to file ");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -400,8 +401,9 @@ public class MyModel extends CommonModel {
 	/**
 	 * Loads the mazes 
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
-	private void loadSolutions() {
+	public void loadSolutions() {
 		File file = new File("solutions.zip");
 		if (!file.exists() | !file.canRead())
 			return;
@@ -413,7 +415,6 @@ public class MyModel extends CommonModel {
 			mazes = (Map<String, Maze3d>)ois.readObject();
 			solutions = (Map<String, Solution<Position>>)ois.readObject();	
 			
-			System.out.println("loaded the maze ");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -432,7 +433,8 @@ public class MyModel extends CommonModel {
 	/**
 	 * Load the xml file 
 	 */
-	private void loadProperties()
+	@Override
+	public void loadProperties()
 	{
 		try {
 			FileInputStream fileInput = new FileInputStream(new File("properties.xml"));
@@ -450,11 +452,74 @@ public class MyModel extends CommonModel {
 			this.solveAlg = "BFS";
 			this.viewStyle="GUI";
 		}
+		setChanged();
+		notifyObservers("the properties was loaded succesfully");
+	}
+	
+	/**
+	 * Save xml to properties
+	 */
+	@Override
+	public void saveProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle)
+	{
+		if (generateMaze!=null && solutionAlg!=null && numThreads!=null && viewStyle!=null )
+		{
+			presenter.Properties pro=new presenter.Properties(generateMaze,solutionAlg,numThreads,viewStyle);
+			Properties properties=new Properties();
+			
+			properties.setProperty("GenerateType", pro.getGenerateMaze());
+			properties.setProperty("SolutionAlgorthim", pro.getSolutionAlg());
+			properties.setProperty("NumberOfThreads", String.valueOf(pro.getNumThreads()));
+			properties.setProperty("ViewStyle", pro.getViewStyle());
+			
+			OutputStream os;
+			try {
+				os = new FileOutputStream("properties.xml");
+				try {
+					properties.storeToXML(os, "Properties of Maze3d","UTF-8");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			setChanged();
+			notifyObservers("the properties was saved");
+		}
+		else{
+			setChanged();
+			notifyObservers("Error: the maze name or file name is empty");
+		}
+	}
+	
+	 /**
+	  * edit properties
+	  * @param listener
+	  */
+	public void editProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle){
+		if (generateMaze!=null && solutionAlg!=null && numThreads!=null && viewStyle!=null )
+		{
+			if (generateMaze!=null)
+				this.generateType=generateMaze;
+			if (solutionAlg!=null)
+				this.solveAlg=solutionAlg;
+			if (numThreads!=null)
+				this.executor = Executors.newFixedThreadPool(numThreads);
+			if(viewStyle!=null)
+				this.viewStyle=viewStyle;
+				
+			loadProperties();
+		}
+		else{
+			setChanged();
+			notifyObservers("Error: the maze name or file name is empty");
+		}
 	}
 	
 	/**
 	 * exit command
 	 */
+	@Override
 	public void exit() {
 		executor.shutdownNow();
 		saveCache();

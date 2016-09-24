@@ -3,7 +3,6 @@ package view;
 import java.io.File;
 import java.util.Observable;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
@@ -17,7 +16,7 @@ public class GuiView extends CommonView{
 	protected MazeWindow mazeWindow;
 	
 	public GuiView() {
-		mazeWindow=new MazeWindow(100, 100);
+		mazeWindow=new MazeWindow(500, 500);
 		
 		mazeWindow.generateMazeSelectionListener(new SelectionListener() {
 			
@@ -27,14 +26,14 @@ public class GuiView extends CommonView{
 				win.run();
 				mazeName=win.getName();
 				setChanged();
-				notifyObservers("generate_maze "+mazeName+ " "+ win.getFloors()+ " " + win.getCols()+ " "+ win.getRows());
+				notifyObservers("generate_maze " +mazeName + " "+ win.getFloors()+ " " + win.getCols()+ " "+ win.getRows());
 			}
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
 		});
 		
-		mazeWindow.solutionSelectionListener(new SelectionListener() {
+		/*mazeWindow.solutionSelectionListener(new SelectionListener() {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -149,7 +148,7 @@ public class GuiView extends CommonView{
 			
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
-		});
+		});*/
 	}
 	
 	@Override

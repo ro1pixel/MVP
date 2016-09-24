@@ -8,12 +8,20 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * BasicWindow abstract class that extends Observable and implements Runnable
+ */
 public abstract class BasicWindow extends Observable implements Runnable {
 
 	protected Display display;
 	protected Shell shell;
 	boolean ownDisplay = false;
 	
+	/**
+	 * CTOR
+	 * @param width of window
+	 * @param height of window
+	 */
 	public BasicWindow(int width, int height) {
 		//display=new Display();
 		display = Display.getCurrent();
@@ -22,15 +30,20 @@ public abstract class BasicWindow extends Observable implements Runnable {
  			ownDisplay = true;
  		}
 		shell=new Shell(display);
-		
-		shell.setSize(width, height);	
+		shell.setSize(width, height);
+		initWidgets();
 	}
 	
+	/**
+	 * initWidgets
+	 */
 	public abstract void initWidgets();
 	
+	/**
+	 * run method
+	 */
 	@Override
 	public void run() {
-		initWidgets();
 		shell.open();
 		
 		while(!shell.isDisposed()){ // window isn't closed
@@ -99,8 +112,6 @@ public abstract class BasicWindow extends Observable implements Runnable {
 				return true;
 			else
 				return false;
-			
-			
 	}
 	/**
 	 * Open a file dialog with user input styles and extentions

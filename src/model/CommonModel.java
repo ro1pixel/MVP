@@ -48,4 +48,19 @@ public abstract class CommonModel extends Observable implements Model {
 
 	@Override
 	public abstract int[][] getCrossSection(String axis,Integer floor,String mazeName);
+	
+	@Override
+	public abstract void saveCache();
+	
+	@Override
+	public abstract void loadSolutions();
+	
+	@Override
+	public abstract void loadProperties();
+	
+	@Override
+	public abstract void saveProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle);
+	
+	@Override
+	public abstract void editProperties(String generateMaze, String solutionAlg, Integer numThreads, String viewStyle);
 }

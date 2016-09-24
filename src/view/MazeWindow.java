@@ -8,6 +8,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
+/**
+ * MazeWindow class extends BasicWindow
+ */
 public class MazeWindow extends BasicWindow{
 	protected Button generateMazeButton;
 	protected Button solutionButton;
@@ -25,10 +28,18 @@ public class MazeWindow extends BasicWindow{
     protected MenuItem exportPropertiesMenuItem;
     protected MenuItem exitMenuItem,aboutMenuItem;
 
+    /**
+     * CTOR
+     * @param width of window
+     * @param height of window
+     */
 	public MazeWindow(int width, int height) {
 		super(width, height);	
 	}
 
+	/**
+	 * initWidget- create the buttons
+	 */
 	@Override
 	public void initWidgets() {
 		initMenu();
@@ -40,20 +51,7 @@ public class MazeWindow extends BasicWindow{
 		generateMazeButton=(new Button(shell, SWT.PUSH));
 		generateMazeButton.setText("Genenrate Maze");
 		generateMazeButton.setLayoutData(new GridData(SWT.FILL,SWT.NONE,false,false,1,1));
-	
-		//to check- OK!
-/*		generateMazeButton.addSelectionListener(new SelectionListener() {
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				GenerateMazeWindow win = new GenerateMazeWindow(300,210);				
-				win.run();
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent arg0) {}
-		});
-*/		
+		
 		maze=new MazeDisplay(shell,SWT.BORDER);
 		maze.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 4));
 		
@@ -70,6 +68,9 @@ public class MazeWindow extends BasicWindow{
 		resetButton.setLayoutData(new GridData(SWT.FILL,SWT.NONE,false,false,1,1));
 	}
 	
+	/**
+	 * initMenu- create the menu with items
+	 */
     private void initMenu() {
     	menuBar=new Menu(shell, SWT.BAR);	
     	cascadeFileMenu=new MenuItem(menuBar, SWT.CASCADE);
@@ -111,42 +112,83 @@ public class MazeWindow extends BasicWindow{
     	shell.setMenuBar(menuBar);
     }
     
+   /**
+    * generateMazeSelectionListener- listener to generate maze
+    * @param listener
+    */
     public void generateMazeSelectionListener(SelectionListener listener){
-		generateMazeButton.addSelectionListener(listener);
-		newGameMenuItem.addSelectionListener(listener);
+    	generateMazeButton.addSelectionListener(listener);
+    	newGameMenuItem.addSelectionListener(listener);
 	}
 	
+    /**
+     * solutionSelectionListener- listener for solving the maze
+     * @param listener
+     */
 	public void solutionSelectionListener(SelectionListener listener){
 		solutionButton.addSelectionListener(listener);
 	}
 	
+	/**
+     * hintSelectionListener- listener for get hint
+     * @param listener
+     */
 	public void hintSelectionListener(SelectionListener listener){
 		hintButton.addSelectionListener(listener);
 	}
 	
+	/**
+     * resetSelectionListener- listener for reset the game
+     * @param listener
+     */
 	public void resetSelectionListener(SelectionListener listener){
 		resetButton.addSelectionListener(listener);
 	}
 	
+	/**
+     * loadMazeSelectionListener- listener for load a maze
+     * @param listener
+     */
 	public void loadMazeSelectionListener(SelectionListener listener){
 		loadMazeMenuItem.addSelectionListener(listener);
 	}
 	
+	/**
+     * saveMazeSelectionListener- listener to save the maze
+     * @param listener
+     */
 	public void saveMazeSelectionListener(SelectionListener listener){
 		saveMazeMenuItem.addSelectionListener(listener);
 	}
 	
+	/**
+     * editPropertiesSelectionListener- listener for the edit properties
+     * @param listener
+     */
 	public void editPropertiesSelectionListener(SelectionListener listener){
 		editPropertiesMenuItem.addSelectionListener(listener);
 	}
 
+	/**
+     * importPropertiesSelectionListener- listener for the import the properties
+     * @param listener
+     */
 	public void importPropertiesSelectionListener(SelectionListener listener){
 		importPropertiesMenuItem.addSelectionListener(listener);
 	}
 	
+	/**
+     * exportPropertiesSelectionListener- listener for the export the properties
+     * @param listener
+     */
 	public void exportPropertiesSelectionListener(SelectionListener listener){
 		exportPropertiesMenuItem.addSelectionListener(listener);
 	}
+	
+	/**
+     * exitSelectionListener- listener to exit
+     * @param listener
+     */
 	public void exitSelectionListener(SelectionListener listener){
 		exitMenuItem.addSelectionListener(listener);
 	};

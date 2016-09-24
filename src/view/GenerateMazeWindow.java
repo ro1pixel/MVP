@@ -18,7 +18,7 @@ public class GenerateMazeWindow extends BasicWindow {
 
 	@Override
 	public void initWidgets() {
-		shell.setText("Generate maze window");
+		shell.setText("Generate maze");
 				
 		shell.setLayout(new GridLayout(2, false));	
 		
