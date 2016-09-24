@@ -21,6 +21,12 @@ public class GenerateMazeWindow extends BasicWindow {
 				
 		shell.setLayout(new GridLayout(2, false));	
 		
+		Label lblName = new Label(shell, SWT.NONE);
+		lblName.setText("Maze name: ");
+		
+		Text txtName = new Text(shell, SWT.BORDER);
+		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		
 		Label lblFloors = new Label(shell, SWT.NONE);
 		lblFloors.setText("Floors: ");
 		
@@ -48,16 +54,12 @@ public class GenerateMazeWindow extends BasicWindow {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {				
-				MessageBox msg = new MessageBox(shell, SWT.OK);
-				msg.setText("Title");
-				//msg.setMessage("Button was clicked");
+				String name=txtName.getText();
+				int floors=Integer.parseInt(txtFloors.getText());
 				int rows = Integer.parseInt(txtRows.getText());
 				int cols = Integer.parseInt(txtCols.getText());
+				displayInfo("Info","maze name : " + name + "\nfloors: "+floors +"\nrows: " + rows + "\ncols: " + cols);
 				
-				msg.setMessage("Generating maze with rows: " + rows + " cols: " + cols);
-				
-				msg.open();
-				shell.close();
 			}
 			
 			@Override

@@ -23,9 +23,8 @@ public class GuiView implements View{
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				GenerateMazeWindow win = new GenerateMazeWindow(200,150);				
+				GenerateMazeWindow win = new GenerateMazeWindow(300,210);			
 				win.run();
-				
 			}
 			
 			@Override
